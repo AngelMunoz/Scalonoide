@@ -14,7 +14,10 @@ object ArgsParse {
     strValue.split(separator).last.trim()
   }
 
-  def findOption(args: Array[String], separator: Char = '=') =
+  def findOption(
+      args: Array[String],
+      separator: Char = '='
+  ): (String, String) => String =
     (name: String, defaultValue: String) => {
       args.find(arg => arg.contains(name)) match {
         case Some(value) => parseIndividual(value, separator)

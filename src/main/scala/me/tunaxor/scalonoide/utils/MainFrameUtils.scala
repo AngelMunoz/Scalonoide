@@ -13,12 +13,12 @@ object MainFrameUtils {
   // Get the file contents to present inside the text area of the main frame
   def getFileContents(file: File): FileData = {
     val scanner = new Scanner(file)
-    var content = "";
-    while (scanner.hasNextLine()) {
+    var content = ""
+    while (scanner.hasNextLine) {
       content += s"${scanner.nextLine()}\n"
     }
     scanner.close()
-    FileData(file.getAbsolutePath(), file.getName(), content)
+    FileData(file.getAbsolutePath, file.getName, content)
   }
 
   // pull the comma separated values and create a WeatherConditon Record
@@ -36,20 +36,20 @@ object MainFrameUtils {
       onDone: () => Unit,
       batchSize: Int = 200
   ) {
-    var current = 0;
-    var total = 0L;
+    var current = 0
+    var total = 0L
     val scanner = new Scanner(file)
     val conditions = new ArrayBuffer[WeatherCondition]()
     // Skip the First line because those are the headers
-    if (scanner.hasNextLine()) {
-      scanner.nextLine();
+    if (scanner.hasNextLine) {
+      scanner.nextLine
     }
     // Keep reading until there are no more lines left
-    while (scanner.hasNextLine()) {
+    while (scanner.hasNextLine) {
       conditions += processLine(scanner.nextLine().trim().split(','))
-      current += 1;
-      total += 1L;
-      // if we're hiting the batch size, insert those and clean up
+      current += 1
+      total += 1L
+      // if we're hitting the batch size, insert those and clean up
       // for a new batch of insertions
       if (current >= batchSize) {
         Database.weatherConditionsCol
@@ -61,7 +61,7 @@ object MainFrameUtils {
     }
     // if we're under the batch size but we're done reading
     // insert what's left on the buffered array
-    if (conditions.length > 0) {
+    if (conditions.nonEmpty) {
       Database.weatherConditionsCol
         .insertMany(conditions)
         .subscribe((completed: Completed) => doNext(completed, total))
@@ -69,6 +69,6 @@ object MainFrameUtils {
     // we're done, close the scanner
     scanner.close()
     // call the done callback
-    onDone();
+    onDone()
   }
 }

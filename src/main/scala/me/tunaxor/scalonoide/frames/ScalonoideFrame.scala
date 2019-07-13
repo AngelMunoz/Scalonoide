@@ -9,8 +9,8 @@ import me.tunaxor.scalonoide.utils.MainFrameUtils
 import org.mongodb.scala.Completed
 import javax.swing.filechooser.FileNameExtensionFilter
 
-object ScalonoideMain {
-  private var _mainFrame: MainFrame = null
+object ScalonoideFrame {
+  private var _mainFrame: MainFrame = _
 
   private val _dirLabel = new Label("")
   private val _progressCounter = new Label("")
@@ -26,7 +26,6 @@ object ScalonoideMain {
     {
       textarea.editable = false
     }
-
   }
 
   private val _btnSaveDb = new Button("Save to Database") {
@@ -46,8 +45,8 @@ object ScalonoideMain {
         * This function may be called a bunch of times if the file
         * contains more records than the configured batch size
        **/
-      (completed: Completed, total: Long) => {
-        _progressCounter.text = s"Procesed: [${total}] Records"
+      (_: Completed, total: Long) => {
+        _progressCounter.text = s"Processed: [$total] Records"
       },
       () => {
         _btnSaveDb.enabled = false
@@ -55,17 +54,17 @@ object ScalonoideMain {
     )
   }
 
-  def openFile = {
+  def openFile(): Unit = {
     _chooser.showOpenDialog(_mainFrame)
     updateContent(
       MainFrameUtils.getFileContents(_chooser.selectedFile)
     )
-    _btnSaveDb.enabled = true;
+    _btnSaveDb.enabled = true
   }
 
   def updateContent(fileData: FileData) {
     _dirLabel.text = fileData.path
-    _txtArea.text = fileData.content;
+    _txtArea.text = fileData.content
   }
 
   private def frameContent: Panel = {
@@ -80,7 +79,7 @@ object ScalonoideMain {
         }
         contents += new Button("Select File") {
           reactions += {
-            case event.ButtonClicked(_) => openFile
+            case event.ButtonClicked(_) => openFile()
           }
         }
         contents += _dirLabel
@@ -98,7 +97,7 @@ object ScalonoideMain {
       title = appTitle
       contents = frameContent
       reactions += {
-        case event.WindowClosing(_) => Database.closeConnection
+        case event.WindowClosing(_) => Database.closeConnection()
       }
     }
     frame.pack()

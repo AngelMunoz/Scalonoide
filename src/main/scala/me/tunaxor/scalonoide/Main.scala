@@ -1,8 +1,7 @@
 package me.tunaxor.scalonoide
-import scala.swing.SimpleSwingApplication
 import scala.swing.SwingApplication
 
-import me.tunaxor.scalonoide.frames.ScalonoideMain
+import me.tunaxor.scalonoide.frames.ScalonoideFrame
 import me.tunaxor.scalonoide.utils.ArgsParse
 import me.tunaxor.scalonoide.data.Database
 
@@ -16,6 +15,6 @@ object Main extends SwingApplication {
     val options = ArgsParse.getOptions(args)
     _env = options.env
     Database.createClient(options.dbOptions.url, options.dbOptions.dbname)
-    ScalonoideMain.startup(options);
+    ScalonoideFrame.startup(options)
   }
 }

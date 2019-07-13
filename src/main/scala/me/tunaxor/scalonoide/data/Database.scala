@@ -13,9 +13,8 @@ import org.bson.codecs.configuration.CodecRegistries.{
   * Manage Database operations here
  **/
 object Database {
-  private var _client: MongoClient = null;
-  private var _dbName: String = null;
-  private var _database: MongoDatabase = null;
+  private var _client: MongoClient = _
+  private var _dbName: String = _
   private val _codecRegistry = fromRegistries(
     /**
       * Add more classes if needed
@@ -29,9 +28,9 @@ object Database {
     _dbName = dbname
   }
 
-  def closeConnection = _client.close()
+  def closeConnection(): Unit = _client.close()
 
-  def database(name: String) =
+  def database(name: String): MongoDatabase =
     _client
       .getDatabase(name)
       .withCodecRegistry(_codecRegistry)
@@ -41,7 +40,7 @@ object Database {
     * different methods to pull collections directly
     * just remember to register the class with the codec registry above
    **/
-  def weatherConditionsCol =
+  def weatherConditionsCol: MongoCollection[WeatherCondition] =
     database(_dbName)
       .getCollection[WeatherCondition]("weather-conditions")
 }
