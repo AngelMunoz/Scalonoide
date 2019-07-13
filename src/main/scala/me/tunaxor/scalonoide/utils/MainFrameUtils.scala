@@ -1,12 +1,12 @@
 package me.tunaxor.scalonoide.utils
 import java.io.File
 import java.util.Scanner
-import me.tunaxor.scalonoide.models.FileData
-import me.tunaxor.scalonoide.models.WeatherCondition
-import scala.collection.mutable.ArrayBuffer
+
 import me.tunaxor.scalonoide.data.Database
-import org.mongodb.scala.Observer
+import me.tunaxor.scalonoide.models.{FileData, WeatherCondition}
 import org.mongodb.scala.Completed
+
+import scala.collection.mutable.ArrayBuffer
 
 object MainFrameUtils {
 
@@ -19,15 +19,6 @@ object MainFrameUtils {
     }
     scanner.close()
     FileData(file.getAbsolutePath, file.getName, content)
-  }
-
-  // pull the comma separated values and create a WeatherConditon Record
-  def processLine(row: Array[String]): WeatherCondition = {
-    val temp: Float = row(0).toFloat
-    val unitTemp: String = row(1)
-    val windSpeed: Float = row(2).toFloat
-    val windSpeedUnit: String = row(3)
-    WeatherCondition(temp, unitTemp, windSpeed, windSpeedUnit)
   }
 
   def processFileContents(
@@ -70,5 +61,14 @@ object MainFrameUtils {
     scanner.close()
     // call the done callback
     onDone()
+  }
+
+  // pull the comma separated values and create a WeatherConditon Record
+  def processLine(row: Array[String]): WeatherCondition = {
+    val temp: Float = row(0).toFloat
+    val unitTemp: String = row(1)
+    val windSpeed: Float = row(2).toFloat
+    val windSpeedUnit: String = row(3)
+    WeatherCondition(temp, unitTemp, windSpeed, windSpeedUnit)
   }
 }

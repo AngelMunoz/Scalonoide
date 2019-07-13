@@ -1,9 +1,9 @@
 package me.tunaxor.scalonoide
-import scala.swing.SwingApplication
-
+import me.tunaxor.scalonoide.data.Database
 import me.tunaxor.scalonoide.frames.ScalonoideFrame
 import me.tunaxor.scalonoide.utils.ArgsParse
-import me.tunaxor.scalonoide.data.Database
+
+import scala.swing.SwingApplication
 
 object Main extends SwingApplication {
   private var _env = "production"

@@ -1,4 +1,11 @@
-# Readme.md
+# Scalonoide
+this is a small replica from one of the first projects I've ever made [dbJyUpdater](https://github.com/AngelMunoz/dbJyUpdater)
+that was a project I made for school where I picked a CSV file from disk and updated a MySQL database using Jython and Java Swing
+
+This time I decided to use Scala as the Development language for Learning Purposes
+for being a replica/proof of concept of a Language I don't really know that much I feel Happy with the results
+it means Scala isn't as Scary as it may seem, feels really good and quite familiar, of course this project is a toy
+and there are no best practices around.
 
 recommended `.vscode/settings.json`
 

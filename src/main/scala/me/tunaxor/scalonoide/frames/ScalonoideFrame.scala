@@ -1,17 +1,15 @@
 package me.tunaxor.scalonoide.frames
-import scala.swing._
-import scala.swing.event._
 import java.io.File
-import me.tunaxor.scalonoide.models.{AppOptions, FileData}
+
+import javax.swing.filechooser.FileNameExtensionFilter
 import me.tunaxor.scalonoide.data.Database
-import me.tunaxor.scalonoide.models.WeatherCondition
+import me.tunaxor.scalonoide.models.{AppOptions, FileData}
 import me.tunaxor.scalonoide.utils.MainFrameUtils
 import org.mongodb.scala.Completed
-import javax.swing.filechooser.FileNameExtensionFilter
+
+import scala.swing._
 
 object ScalonoideFrame {
-  private var _mainFrame: MainFrame = _
-
   private val _dirLabel = new Label("")
   private val _progressCounter = new Label("")
   private val _chooser = new FileChooser { chooser =>
@@ -21,19 +19,18 @@ object ScalonoideFrame {
       chooser.fileFilter = new FileNameExtensionFilter("CSV File", "csv")
     }
   }
-
   private val _txtArea = new TextArea(rows = 25, columns = 100) { textarea =>
     {
       textarea.editable = false
     }
   }
-
   private val _btnSaveDb = new Button("Save to Database") {
     reactions += {
       case event.ButtonClicked(_) => saveToDb(_chooser.selectedFile)
     }
     enabled = false
   }
+  private var _mainFrame: MainFrame = _
 
   /**
     * Pass the file that was picked by the User
@@ -54,17 +51,23 @@ object ScalonoideFrame {
     )
   }
 
-  def openFile(): Unit = {
-    _chooser.showOpenDialog(_mainFrame)
-    updateContent(
-      MainFrameUtils.getFileContents(_chooser.selectedFile)
-    )
-    _btnSaveDb.enabled = true
+  def startup(options: AppOptions) {
+    _mainFrame = createMainFrame(options.title)
+    _mainFrame.centerOnScreen()
+    _mainFrame.open()
   }
 
-  def updateContent(fileData: FileData) {
-    _dirLabel.text = fileData.path
-    _txtArea.text = fileData.content
+  private def createMainFrame(appTitle: String): MainFrame = {
+    val frame = new MainFrame {
+      title = appTitle
+      contents = frameContent
+      reactions += {
+        case event.WindowClosing(_) => Database.closeConnection()
+      }
+    }
+    frame.pack()
+    frame.size = new Dimension(800, 600)
+    frame
   }
 
   private def frameContent: Panel = {
@@ -92,22 +95,16 @@ object ScalonoideFrame {
     }
   }
 
-  private def createMainFrame(appTitle: String): MainFrame = {
-    val frame = new MainFrame {
-      title = appTitle
-      contents = frameContent
-      reactions += {
-        case event.WindowClosing(_) => Database.closeConnection()
-      }
-    }
-    frame.pack()
-    frame.size = new Dimension(800, 600)
-    frame
+  def openFile(): Unit = {
+    _chooser.showOpenDialog(_mainFrame)
+    updateContent(
+      MainFrameUtils.getFileContents(_chooser.selectedFile)
+    )
+    _btnSaveDb.enabled = true
   }
 
-  def startup(options: AppOptions) {
-    _mainFrame = createMainFrame(options.title)
-    _mainFrame.centerOnScreen()
-    _mainFrame.open()
+  def updateContent(fileData: FileData) {
+    _dirLabel.text = fileData.path
+    _txtArea.text = fileData.content
   }
 }

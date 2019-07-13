@@ -4,27 +4,6 @@ import me.tunaxor.scalonoide.models.{AppOptions, DbOptions}
 
 object ArgsParse {
 
-  /**
-    * the String should come in the following Form
-    * key<SEPARATOR>value
-    * @example title=my-title
-    * Spaces are not taken into account
-   **/
-  def parseIndividual(strValue: String, separator: Char): String = {
-    strValue.split(separator).last.trim()
-  }
-
-  def findOption(
-      args: Array[String],
-      separator: Char = '='
-  ): (String, String) => String =
-    (name: String, defaultValue: String) => {
-      args.find(arg => arg.contains(name)) match {
-        case Some(value) => parseIndividual(value, separator)
-        case None        => defaultValue
-      }
-    }
-
   def getOptions(args: Array[String]): AppOptions = {
 
     /**
@@ -45,5 +24,27 @@ object ArgsParse {
     val dbname = findWithOptions("db_name", "scalonoidedb")
     // return the App Options
     AppOptions(env, title, DbOptions(url, dbname))
+  }
+
+  def findOption(
+      args: Array[String],
+      separator: Char = '='
+  ): (String, String) => String =
+    (name: String, defaultValue: String) => {
+      args.find(arg => arg.contains(name)) match {
+        case Some(value) => parseIndividual(value, separator)
+        case None        => defaultValue
+      }
+    }
+
+  /**
+    * the String should come in the following Form
+    * key<SEPARATOR>value
+    *
+    * @example title=my-title
+    * Spaces are not taken into account
+   **/
+  def parseIndividual(strValue: String, separator: Char): String = {
+    strValue.split(separator).last.trim()
   }
 }
